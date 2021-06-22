@@ -387,3 +387,46 @@ spec:
 
 구세완 님이 모두에게:    오후 3:24
 157페이지(104페이지) 의 프로파일은 어떻게 실행을 했는지요?
+구세완 님이 모두에게:    오후 3:27
+그 코드들은 어디서 볼 수 있나요?
+강사 김대경 님이 모두에게:    오후 3:28
+/sys/kernel/security/apparmor/profiles
+강사 김대경 님이 모두에게:    오후 3:34
+kubectl run hello-web --labels app=hello --image=gcr.io/google-samples/hello-app:1.0 --port 8080 --expose
+강사 김대경 님이 모두에게:    오후 3:35
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: hello-allow-from-foo
+spec:
+  policyTypes:
+  - Ingress
+  podSelector:
+    matchLabels:
+      app: hello
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: foo
+
+강사 김대경 님이 모두에게:    오후 3:41
+kubectl run -l app=foo --image=alpine --restart=Never --rm -it test-1
+강사 김대경 님이 모두에게:    오후 3:42
+wget -qO- --timeout=2 http://hello-web:8080
+강사 김대경 님이 모두에게:    오후 3:46
+네 그럴 수 있습니다. 클라우드 서비스에서 제한이 될 수 있습니다.
+박상욱책임/생체인지Task/CTO 님이 모두에게:    오후 4:05
+저 과제에서 클러스터의 갯수는 몇개인가요?
+공서우/선임연구원/DXT센터 님이 모두에게:    오후 4:06
+구축 과정 스크립트 모두인가요;;
+박상욱책임/생체인지Task/CTO 님이 모두에게:    오후 4:08
+???
+박상욱책임/생체인지Task/CTO 님이 모두에게:    오후 4:08
+마스터 생성할때 클러스터 생성이 자동으로 되는데 
+박상욱책임/생체인지Task/CTO 님이 모두에게:    오후 4:09
+마스터가 설정된 클러스터에 마스터 참여시키는 명령을 우리가 배웠나요?
+CTO_김병훈 님이 모두에게:    오후 4:10
+\[
+민경직/선임/webOS Platform Task 님이 모두에게:    오후 4:50
+실제로 그래서 어떻게 join시키는지는 내일 강의해주시나요?
