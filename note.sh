@@ -349,3 +349,10 @@ spec:
   imagePullSecrets:
   - name: regcred
 
+강사 김대경 님이 모두에게:    오후 3:03
+kubectl get nodes -o=jsonpath=$'{range .items[*]}{@.metadata.name}: {@.status.nodeInfo.kubeletVersion}\n{end}'
+강사 김대경 님이 모두에게:    오후 3:05
+cat /sys/module/apparmor/parameters/enabled
+
+강사 김대경 님이 모두에게:    오후 3:05
+sudo cat /sys/kernel/security/apparmor/profiles
