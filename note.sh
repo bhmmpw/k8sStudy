@@ -337,3 +337,15 @@ kubectl create secret docker-registry regcred --docker-server=lookerz-private --
 kubectl get secret regcred --output=yaml
 kubectl get secret regcred --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode
 echo "앞에서 조회한 토큰 값" | base64 --decode
+강사 김대경 님이 모두에게:    오후 2:44
+apiVersion: v1
+kind: Pod
+metadata:
+  name: private-reg
+spec:
+  containers:
+  - name: private-reg-container
+    image: lookerz/lookerz-private
+  imagePullSecrets:
+  - name: regcred
+
