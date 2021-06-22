@@ -85,13 +85,218 @@ INSTALL_K3S_EXEC="--node-name worker1 --docker" \
 INSTALL_K3S_VERSION="v1.20.0-rc4+k3s1" sh -s –
 신동렬 님이 모두에게:    오전 9:11
 방금 말씀하신대로 구성하고자 하는거면 LB가 필요없지 않나요? 
+신동렬 님이 모두에게:    오전 9:13
+kubernetes용 로드밸런서는 무슨 라우팅 알고리즘 사용할까요? 
+신동렬 님이 모두에게:    오전 9:13
+잘 이해가 되지 않아서 문의드립니다. 로드밸런싱을 하면 
+신동렬 님이 모두에게:    오전 9:13
+node에서 로드밸런서의 vip호출할때마다 
+신동렬 님이 모두에게:    오전 9:13
+도달하는? master의 ip가 계속 바뀔텐데 
+신동렬 님이 모두에게:    오전 9:14
+그때마다 그럼 토큰값을 넣고 
+신동렬 님이 모두에게:    오전 9:14
+새로운 master에 종속되는건지 문의드리빈다. 
+민경직/선임/webOS Platform Task 님이 모두에게:    오전 9:16
+각 노드가 종속되는 master가 지금 우리가 설정한대로 하면 자동으로 switching 되냐는 질문이신것 같은데요
+민경직/선임/webOS Platform Task 님이 모두에게:    오전 9:16
+저도 의문입니다
+신동렬 님이 모두에게:    오전 9:16
+방금 구성도 사진에서는 로드밸런서에 Master노드들이 붙어서 밸런싱이 되는것처럼 보여서 문의드려봤씁니다. 
+구세완 님이 모두에게:    오전 9:17
+오늘 다시 인스톨한 내용이 어제 인스톨한 것과 차이를 설명해주시면 좋겠습니다.
+구세완 님이 모두에게:    오전 9:20
+kubectl 로 마스터노드 2개를 볼 수 없나요?
+CTO_김성찬 님이 모두에게:    오전 9:20
+환경 설정으로 webex 나갔다가 오겠습니다
+민경직/선임/webOS Platform Task 님이 모두에게:    오전 9:21
+master/worker1/worker2 이 리스트는 /etc/hosts에서부터 나오는건가요?
+구세완 님이 모두에게:    오전 9:23
+하나의 워크노드가 2개 마스터에 조인이 가능한가요?
+신동렬 님이 모두에게:    오전 9:24
+강사님 어제 마지막 설문조사때도 그렇고 virtualbox가 정상적으로 동작하지 않아 managed로 구성하신 분들도 있는 것으로 사려됩니다. 방금 보여주신 과제는 managed로 구성한 사람들은 어떻게 제출해야할까요? 
+민경직/선임/webOS Platform Task 님이 모두에게:    오전 9:25
+클러스터 구성할때마다 버철박스 인스턴스 하나씩 만들어야 하는거죠?
+BS_장준표 님이 모두에게:    오전 9:29
+강사님 지금 수업교재 파일로 제공 가능 하신가요?
+강사 김대경 님이 모두에게:    오전 9:36
+cat > echo-version-blue.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echo-version-blue
+  labels:
+    app: echo-version
+    color: blue
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: echo-version
+      color: blue
+  template:
+    metadata:
+      labels:
+        app: echo-version 
+        color: blue
+    spec:
+      containers:
+      - name: echo-version 
+        image: gihyodocker/echo-version:0.1.0 
+        ports:
+        - containerPort: 8080
+강사 김대경 님이 모두에게:    오전 9:37
+cat > deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: etcd-operator-deployment
+  labels:
+    app: etcd-operator
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: etcd-operator
+  template:
+    metadata:
+      labels:
+        app: etcd-operator
+    spec:
+      containers:
+      - name: etcd-operator
+        image: quay.io/coreos/etcd-operator:v0.9.4
+        command:
+        - etcd-operator
+        # Uncomment to act for resources in all namespaces. More information in doc/user/clusterwide.md
+        #- -cluster-wide
+        env:
+        - name: MY_POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: MY_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+민경직/선임/webOS Platform Task 님이 모두에게:    오전 9:39
+swedu에 올려주시면 감사하겠습니다.
+민경직/선임/webOS Platform Task 님이 모두에게:    오전 9:45
+강사님 죄송한데 deployment.yaml먼저 올려주시면 감사하겠습니다. 구두로 수정포인트 설명해주신것과 다릅니다
+민경직/선임/webOS Platform Task 님이 모두에게:    오전 9:45
+metadata부분도 수정하셨는데, 복사해서는 intent가 맞지 않아서 create가 되지 않습니다
+CTO부문_백지웅 님이 모두에게:    오전 9:50
+$ kubectl create -f example-etcd-cluster.yaml 
+error: unable to recognize "example-etcd-cluster.yaml": no matches for kind "EtcdCluster" in version "etcd.database.coreos.com/v1beta2"
 
-
-# [[etcd-operator]]
-1) git clone
-2) modify deployment.yaml
-3) create deployment.yaml
-4) kubectl get customersourcedefinitions
-5) kubectl create -f example-etcd-cluster.yaml
-6) kubectl exec example-etcd-cluster-2slvlwzmxl etcdctl set test "Hello etcd!"
-7) kubectl exec example-etcd-cluster-2slvlwzmxl etcdctl get test
+CTO부문_백지웅 님이 모두에게:    오전 9:51
+에러 나네요..
+강사 김대경 님이 모두에게:    오전 9:56
+사용하시는 쿠버네티스 버전과 매칭되는지 검토해 봐야 합니다.
+CTO_김성찬 님이 모두에게:    오전 9:56
+저는 앞으로의 수업 진행이 가능할지 의문이네요
+CTO_김성찬 님이 모두에게:    오전 9:58
+네 여전합니다 virtubal box 재 설치만 4번 정도..
+구세완 님이 모두에게:    오전 9:59
+etcd cluster 는 워커노드에만 생성되나요?
+CTO_김성찬 님이 모두에게:    오전 10:00
+어떤 식으로든 가능하신 방법으로 지원 부탁 드리겠습니다
+김민재 책임 님이 모두에게:    오전 10:09
+k3s@master:~/tool/etcd-operator/example$ kubectl get pods
+NAME                                        READY   STATUS     RESTARTS   AGE
+etcd-operator-deployment-64689467f6-5bzxt   1/1     Running    0          20m
+etcd-operator-deployment-64689467f6-wgfs5   1/1     Running    0          20m
+etcd-operator-deployment-64689467f6-gxcld   1/1     Running    0          20m
+example-etcd-cluster-2hknr2r2m6             1/1     Running    0          18m
+example-etcd-cluster-8lqsv87wb6             1/1     Running    0          17m
+example-etcd-cluster-g9s8pk759d             1/1     Running    0          17m
+example-etcd-cluster-hrnc72n84b             0/1     Init:0/1   0          10s
+k3s@master:~/tool/etcd-operator/example$ 
+저는 4개가 생성되는것 같은데 
+김민재 책임 님이 모두에게:    오전 10:09
+네 이제 5개 생성 되었습니다.
+BS_장준표 님이 모두에게:    오전 10:09
+현재 가지 작업된것이 master node의 api server가 배포된 etcd를 바라 보고 있는 상태 인가요?
+CTO 윤태희 님이 모두에게:    오전 10:10
+데이터는 어디에 저장되나요?
+구세완 님이 모두에게:    오전 10:11
+아래 command 로는 제환경에서 해당 클러스터pod가 worker노드에 생성되네요.  kubectl get pods -o wide | grep etcd-cluster
+CTO_김병훈 님이 모두에게:    오전 10:13
+external etcd 쓸때 master에서는 아무것도 수정안해도 되나요?
+BS_장준표 님이 모두에게:    오전 10:14
+마스터 노드가 여러개 있을 경우 각각의 마스터에 있는 etcd들은 클러스터링 설정 할 수 있나요?
+박상욱책임/생체인지Task/CTO 님이 모두에게:    오전 10:25
+Failed to pull image "dockerhub.qingcloud.com/google_containers/leader-elector:0.5": rpc error: code = Unknown desc = Error response from daemon: Head https://dockerhub.qingcloud.com/v2/google_containers/leader-elector/manifests/0.5: unauthorized: authentication required
+박상욱책임/생체인지Task/CTO 님이 모두에게:    오전 10:25
+권한이 없어서 이미지를 못가져오는거 같습니다.
+신동렬 님이 모두에게:    오전 10:29
+이미지 풀 에러는 왜 발생하는 것인가요? 
+CTO 윤태희 님이 모두에게:    오전 10:31
+파드에서의 리더의 역할은 뭔가요?
+박상욱책임/생체인지Task/CTO 님이 모두에게:    오전 10:31
+leader 로 선출된 pod는 본인이 leader라는 신호(?)를 받을 수 있나요?
+박상욱책임/생체인지Task/CTO 님이 모두에게:    오전 10:31
+선출될 경우
+김민재 책임 님이 모두에게:    오전 10:32
+에러가 나는  leader를 종료 하고 정상적으로 동작하는것 처럼 보이는데(?) ErrImagePull 에러 없음
+김민재 책임 님이 모두에게:    오전 10:33
+kubectl logs deployment.apps/leader-elector leader-elector
+Found 4 pods, using pod/leader-elector-59b95c7c76-66zzc
+error: container leader-elector is not valid for pod leader-elector-59b95c7c76-66zzc
+근데 여전히  leader는 vaild하지 않는건 왜 그런걸까요?
+민경직/선임/webOS Platform Task 님이 모두에게:    오전 10:34
+leader-elector라는 pod은 단순히 리더 선출만 하는거고 다른 동작은 아무것도 안하는건가요? 기능 구현을 위해서는 leader-elector를 base로 개발을 해야하는것인지요
+민경직/선임/webOS Platform Task 님이 모두에게:    오전 10:36
+그냥 개념설명용 example정도로 생각하면 되는건가요
+BS_장준표 님이 모두에게:    오전 10:37
+여러개의 pod가 생성되는 서비스의 경우 leader 선정하는 것이 고가용성 측면에서 좋다고 생각 하면 되나요?
+vs하창완 님이 모두에게:    오전 10:38
+정책이라는게 쿠버네티스의 설정인가요?? 아니면 yaml에서 설정하는지? container레벨에서 하는건가요??
+민경직/선임/webOS Platform Task 님이 모두에게:    오전 10:38
+네 답변 감사합니다. 필요에 따라 참고용으로 보면 된다로 이해하였습니다
+vs하창완 님이 모두에게:    오전 10:41
+감사합니다.
+강사 김대경 님이 모두에게:    오전 10:47
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: nginx-deployment
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.7.9
+        ports:
+        - containerPort: 80
+신동렬 님이 모두에게:    오전 10:52
+ strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+신동렬 님이 모두에게:    오전 10:52
+요 부분만 잡히고 
+신동렬 님이 모두에게:    오전 10:53
+f:strategy: 부분은 안잡히네요;; 
+공서우/선임연구원/DXT센터 님이 모두에게:    오전 10:57
+아까 leader-elector 이미지는 gcr.io/google_containers/leader-elector:0.4 사용해보세요
+강사 김대경 님이 모두에게:    오전 11:12
+kubectl patch deployment echo-version -p '{"spec":{"template":{"spec":{"containers":[{"name":"echo-version","image":"gihyodocker/echo-version:0.2.0"}]}}}}'
+CTO 윤태희 님이 모두에게:    오전 11:14
+rolling update시에 기존 버전의 pod에서 long running 중인 사용자 request를 처리중이었다면 처리중이던 사용자 request는 어떻게 되나요? 
+LG유플러스 김태경 님이 모두에게:    오전 11:16
+업데이트가 POD를 재기동하는 형태니까 두버전으로 처리되는게 아니라, 일시적으로 단절을 경험하는거 아닌가요?
+CTO_김성찬 님이 모두에게:    오전 11:22
+교재 128 page 질문입니다. "배포 리소스는 하나의 노드를 업그레이드하는 경우 유용" --> 노드를 업그레이드 한다는 것을 좀 더 설명 가능하실까요?
+민경직/선임/webOS Platform Task 님이 모두에게:    오전 11:29
+롤링업데이트에서 발생할수 있는 문제점을 보강하는 방법론으로 봐야하는것 아닌지요? 완전 다른 업데이트 방식이라기보다는
+민경직/선임/webOS Platform Task 님이 모두에게:    오전 11:30
+blue-green에서는 테스트 통과시 모든 pod이 동시에 1.1로 넘어가게 되는개념인가요?
