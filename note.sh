@@ -300,3 +300,40 @@ CTO_김성찬 님이 모두에게:    오전 11:22
 롤링업데이트에서 발생할수 있는 문제점을 보강하는 방법론으로 봐야하는것 아닌지요? 완전 다른 업데이트 방식이라기보다는
 민경직/선임/webOS Platform Task 님이 모두에게:    오전 11:30
 blue-green에서는 테스트 통과시 모든 pod이 동시에 1.1로 넘어가게 되는개념인가요?
+강사 김대경 님이 모두에게:    오전 11:39
+kubectl patch service echo-version -p '{"spec":{"selector":{"color":"green"}}}'
+CTO_김성찬 님이 모두에게:    오전 11:40
+echo-version-bluegreen-service.yaml 내용 공유 가능하신가요
+민경직/선임/webOS Platform Task 님이 모두에게:    오전 11:40
+댓글로 있습니다
+CTO_김성찬 님이 모두에게:    오전 11:50
+CP 약자, AP 약자가 무슨 뜻인지 궁금합니다
+민경직/선임/webOS Platform Task 님이 모두에게:    오전 11:51
+식사맛잇게 하세요
+신동렬 님이 모두에게:    오전 11:52
+수고하셧스빈다
+강사 김대경 님이 모두에게:    오전 11:52
+네 감사합니다. 점심 맛이?ㅆ
+강사 김대경 님이 모두에게:    오전 11:52
+점심 맛있게 드세요?
+민경직/선임/webOS Platform Task 님이 모두에게:    오후 1:01
+네
+민경직/선임/webOS Platform Task 님이 모두에게:    오후 1:46
+토큰확인 명령어 한번만 더 보여주세요
+구세완 님이 모두에게:    오후 1:50
+마지막 명령어 한번만 더 보여주세요.
+강사 김대경 님이 모두에게:    오후 1:51
+ kubectl -v=7 get po pod-1
+구세완 님이 모두에게:    오후 1:52
+명령의 목적을 한번 더 설명해주실 수 있을지요..?
+강사 김대경 님이 모두에게:    오후 1:53
+클라이언트에서 API 서버 접근 하는 유형에 대해 살펴보는 조회 명령어입니다.
+김민재 책임 님이 모두에게:    오후 2:35
+명령어 채팅창에 남겨주실수 있나요?
+김민재 책임 님이 모두에게:    오후 2:36
+그리고 username과 password는 노출되지 않고 입력 받는형태로 생성 할수는 없나요?
+강사 김대경 님이 모두에게:    오후 2:37
+kubectl create secret docker-registry regcred --docker-server=lookerz-private --docker-username=계정아이디 --docker-password=비밀번호 --docker-email=이메일
+kubectl get secret regcred --output=yaml
+kubectl get secret regcred --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode
+echo "앞에서 조회한 토큰 값" | base64 --decode
