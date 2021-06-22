@@ -356,3 +356,34 @@ cat /sys/module/apparmor/parameters/enabled
 
 강사 김대경 님이 모두에게:    오후 3:05
 sudo cat /sys/kernel/security/apparmor/profiles
+강사 김대경 님이 모두에게:    오후 3:06
+ssh master "sudo cat /sys/kernel/security/apparmor/profiles | sort"
+민경직/선임/webOS Platform Task 님이 모두에게:    오후 3:09
+지금 루트 계정이라서
+민경직/선임/webOS Platform Task 님이 모두에게:    오후 3:09
+그러신것 같은데요
+박상욱책임/생체인지Task/CTO 님이 모두에게:    오후 3:09
+k3s 계정으로 하는게 아닐까요?
+민경직/선임/webOS Platform Task 님이 모두에게:    오후 3:09
+저는 다른 오류가 나옵니다
+민경직/선임/webOS Platform Task 님이 모두에게:    오후 3:10
+sudo: a terminal is required to read the password; either use the -S option to read from standard input or configure an askpass helper
+민경직/선임/webOS Platform Task 님이 모두에게:    오후 3:10
+지금 그 오류랑 같은 메시지입니다
+강사 김대경 님이 모두에게:    오후 3:12
+kubectl get nodes -o=jsonpath=$'{range .items[*]}{@.metadata.name}: {.status.conditions[?(@.reason=="KubeletReady")].message}\n{end}'
+강사 김대경 님이 모두에게:    오후 3:16
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hello-apparmor
+  annotations:
+    container.apparmor.security.beta.kubernetes.io/hello: localhost/k8s-apparmor-example-deny-write
+spec:
+  containers:
+  - name: hello
+    image: busybox
+    command: [ "sh", "-c", "echo 'Hello AppArmor!' && sleep 1h" ]
+
+구세완 님이 모두에게:    오후 3:24
+157페이지(104페이지) 의 프로파일은 어떻게 실행을 했는지요?
