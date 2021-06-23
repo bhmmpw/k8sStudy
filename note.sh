@@ -194,3 +194,134 @@ hue-learn yaml 파일 보시면 app: hue 가 있잖아요.
 reminder 이미지를 busybox 로만 만들었는데 기본 busybox 이미지가 8080에 대해 원래 응답이 있나요?
 CTO부문_윤동영 님이 모두에게:    오전 10:06
 우리가 띄운 learn 이나 reminder 도커 이미지가 8080으로 접속되는 서비스 데몬이 돌고 있는 도커 이미지가 아니지 않나요? 단순 에코만 출력하는 이미지 아니었나요? dentist 라는 ... string이 어느 시점에 들어간건지?
+강사 김대경 님이 모두에게:    오전 10:21
+apiVersion: v1
+kind: Pod
+metadata:
+  name: trouble-shooter 
+  labels: 
+    role: trouble-shooter
+spec: 
+  nodeSelector: 
+    kubernetes.io/hostname: k3d-k3s-default-worker-2 
+  containers: 
+  - name: trouble-shooter 
+    image: g1g1/py-kube:0.2 
+    command: ["bash"] 
+    args: ["-c", "echo started...; while true ; do sleep 1 ; done"]
+
+CTO_김성찬 님이 모두에게:    오전 10:23
+image 가 접근 가능한 거 맞지요
+CTO_김성찬 님이 모두에게:    오전 10:24
+되네요
+민경직/선임/webOS Platform Task 님이 모두에게:    오전 10:26
+계속 pending으로 뜨는데 k3d-k3s-default-worker-2 라는 워커노드이름이 달라서 그런걸까요?
+민경직/선임/webOS Platform Task 님이 모두에게:    오전 10:26
+실습대로만 따라했는데 저 이름은 어디서 얻어올 수 있나요
+민경직/선임/webOS Platform Task 님이 모두에게:    오전 10:27
+아 대쉬가 붙어있군요 처음에 공유해주신거에
+민경직/선임/webOS Platform Task 님이 모두에게:    오전 10:27
+worker-2 -> worker2
+민경직/선임/webOS Platform Task 님이 모두에게:    오전 10:28
+음.. 수정해도 계속 pending이네요
+김민재 책임 님이 모두에게:    오전 10:29
+그냥 worker1 이나 worker2로 해야 하지 않나요?
+박상욱책임/생체인지Task/CTO 님이 모두에게:    오전 10:30
+3
+구세완 님이 모두에게:    오전 10:30
+3
+신동렬/LG유플러스 님이 모두에게:    오전 10:30
+3
+구세완 님이 모두에게:    오전 10:30
+kubectl describe node | grep kubernetes.io/hostname 로 확인을 하시면 될 듯 합니닫.
+박상욱책임/생체인지Task/CTO 님이 모두에게:    오전 10:30
+hostname 에 등록한 node 이름을 넣어서 했습니다.
+신동렬/LG유플러스 님이 모두에게:    오전 10:31
+동일하게 했습니다 
+박상욱책임/생체인지Task/CTO 님이 모두에게:    오전 10:31
+vm의 hostname은 안되구요
+민경직/선임/webOS Platform Task 님이 모두에게:    오전 10:31
+그냥 단순히 worker2로 나오네요
+민경직/선임/webOS Platform Task 님이 모두에게:    오전 10:32
+yaml파일 수정해주셔야 하는거 아닌가요 실습 책에
+민경직/선임/webOS Platform Task 님이 모두에게:    오전 10:32
+비기너는 쉽지가 않네요
+민경직/선임/webOS Platform Task 님이 모두에게:    오전 10:32
+박상욱 책임님 답변 감사합니다
+민경직/선임/webOS Platform Task 님이 모두에게:    오전 10:32
+잘되네요 이제
+민경직/선임/webOS Platform Task 님이 모두에게:    오전 10:33
+k3d-k3s-default-worker-2
+민경직/선임/webOS Platform Task 님이 모두에게:    오전 10:33
+를 worker2로 바꾸고
+민경직/선임/webOS Platform Task 님이 모두에게:    오전 10:33
+다시 create했어요
+민경직/선임/webOS Platform Task 님이 모두에게:    오전 10:33
+근데 실습자료대로만 하는데
+CTO_김성찬 님이 모두에게:    오전 10:33
+저도 채팅창을 따라..
+민경직/선임/webOS Platform Task 님이 모두에게:    오전 10:33
+안되는건 실습자료에 오류가 있는거니 수정해주세요
+강사 김대경 님이 모두에게:    오전 10:43
+apiVersion: v1
+kind: Pod
+metadata:
+  name: no-tolerate
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+
+강사 김대경 님이 모두에게:    오전 10:46
+apiVersion: v1
+kind: Pod
+metadata:
+  name: tolerate
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+  tolerations:
+  - key: "project"
+    value: "A"
+    operator: "Equal"
+    effect: "NoSchedule"
+
+CTO부문_백지웅 님이 모두에게:    오전 10:52
+강사님 vm이랑 터미널창좀 키워주세요
+김민재 책임 님이 모두에게:    오전 10:52
+k3s@master:~/hue/trouble$ kubectl get pod -owide | grep tolerate
+no-tolerate                                 1/1     Running            0          7m13s   10.42.0.61   master    <none>           <none>
+tolerate                                    1/1     Running            0          3m46s   10.42.0.62   master    <none>           <none>
+그리고 저는 둘다 여전히 master이네요 
+CTO부문_백지웅 님이 모두에게:    오전 10:53
+worker vm 띄우셨나요
+강사 김대경 님이 모두에게:    오전 10:54
+네.. 조절했습니다.
+CTO부문_백지웅 님이 모두에게:    오전 10:54
+감사합니다
+김민재 책임 님이 모두에게:    오전 10:54
+네 실행 시켜두었습니다.
+CTO_김성찬 님이 모두에게:    오전 11:05
+key 가 있고 value 가 없는 것이지요?
+신동렬/LG유플러스 님이 모두에게:    오전 11:05
+value: A는 그럼 왜 드렁가 있는것인가요? 
+신동렬/LG유플러스 님이 모두에게:    오전 11:05
+들어
+강사 김대경 님이 모두에게:    오전 11:06
+apiVersion: v1
+kind: Pod
+metadata:
+  name: badsector
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+  tolerations:
+  - key: "project"
+    value: "A"
+    operator: "Equal"
+    effect: "NoSchedule"
+  - key: "badsector"
+    operator: "Exists"
+
