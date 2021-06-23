@@ -426,3 +426,91 @@ yaml파일들 swedu에 한번씩 올려주시면 감사하겠습니다 ㅠ
 민경직/선임/webOS Platform Task 님이 모두에게:    오전 11:49
 감사합니다
 
+CTO_김성찬 님이 모두에게:    오후 1:24
+저는 apiVersion: batch/v1 이라는 건 처음 보는 것 같은데, 이 부분 좀 더 설명 가능하실까요?
+CTO_김성찬 님이 모두에게:    오후 1:46
+197 page 에서 질문인데요 readiness probe 가 실패일때
+CTO_김성찬 님이 모두에게:    오후 1:47
+컨테이너의 모드는 등록된 모든 서비스의 엔드 포인트에서 삭제됨 이부분 설명 좀..
+CTO_김성찬 님이 모두에게:    오후 1:49
+그러면 청취에 대한 liveness probe 는 OK 이어도
+CTO_김성찬 님이 모두에게:    오후 1:49
+readiness가 failure 이면
+신동렬/LG유플러스 님이 모두에게:    오후 2:14
+Master노드도 자동 scaleout이 되게 할 수 있나요? 
+신동렬/LG유플러스 님이 모두에게:    오후 2:15
+넵 감사합니다. 
+강사 김대경 님이 모두에게:    오후 2:26
+https://github.com/kubernetes-sigs/metrics-server
+
+구세완 님이 모두에게:    오후 2:30
+적용을 안하신 것 같습니다.
+신동렬/LG유플러스 님이 모두에게:    오후 2:31
+apply 이후에 yaml파일 수정 부분 다시한번만 보여주시길 부탁드리겟습니다. 
+CTO부문_백지웅 님이 모두에게:    오후 2:33
+kubectl top pods -n kube-system
+이거 먼저 하고 하니까 되네요
+CTO부문_백지웅 님이 모두에게:    오후 2:33
+k3s@master1:~/metrics$ kube top nodes
+명령어 'kube' 을(를) 찾을 수 없습니다. 다음 명령어로 시도하시겠습니까:
+  snap kubukubu의 명령어 ' (1.1.4)'
+  deb jubejube의 명령어 ' (2.2.2-1)'
+  deb qubeavogadro-utils의 명령어 ' (1.93.0-3)'
+'snap info <snapname>'에서 추가 버전을 확인하십시오.
+k3s@master1:~/metrics$ kubectl top pods -n kube-system
+NAME                                      CPU(cores)   MEMORY(bytes)
+coredns-7dc8bdd58c-dkdjj                  3m           11Mi
+local-path-provisioner-7c458769fb-99stg   1m           6Mi
+metrics-server-c5f5f4c85-jhc7r            4m           14Mi
+k3s@master1:~/metrics$
+k3s@master1:~/metrics$
+k3s@master1:~/metrics$
+k3s@master1:~/metrics$ kubectl top nodes
+NAME        CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%
+master      91m          4%     1205Mi          60%
+worker1-1   41m          2%     1085Mi          54%
+
+강사 김대경 님이 모두에게:    오후 3:03
+kubectl config set-context ns --namespace=ns --user=default --cluster=default
+CTO_김성찬 님이 모두에게:    오후 3:13
+명령어 공유를 부탁 드립니다
+강사 김대경 님이 모두에게:    오후 3:15
+  204  kubectl create namespace ns
+  205  kubectl config set-context ns --namespace=ns --user-default --cluster=default
+  206  kubectl config set-context ns --namespace=ns --user=default --cluster=default
+  207  kubectl config use-context ns
+  208  cat > compute-quota.yaml
+  209  kubectl apply -f compute-quota.yaml
+  210  cat > object-count-quota.yaml
+  211  kubectl apply -f object-count-quota.yaml
+  212  kubectl get quota
+  213  kubectl describe quota compute-quota
+  214  kubectl describe quota object-counts-quota
+  215  cat > nginx-deployment.yaml
+  216  kubectl create -f nginx-deployment.yaml
+  217  kubectl get pods
+  218  kubectl describe deployment nginx
+  219  kubectl get rs nginx-deployment-5bf87f5f59 -o json
+
+구세완 님이 모두에게:    오후 3:16
+kubectl config use-context ns 이후에 kubectl get pod 를 해보니, 에러가 나는데요.
+구세완 님이 모두에게:    오후 3:16
+에러메시지는 이와 같습니다. : The connection to the server localhost:8080 was refused - did you specify the right host or port?
+
+구세완 님이 모두에게:    오후 3:16
+kubectl config view 는 보입니다.
+CTO_김성찬 님이 모두에게:    오후 3:21
+Flag --replicas has been deprecated, has no effect and will be removed in the future.
+CTO_김성찬 님이 모두에게:    오후 3:21
+이렇게 나오네요
+CTO_김성찬 님이 모두에게:    오후 3:22
+kubectl run nginx \
+ --image=nginx \
+ --replicas=1 \
+ --requests=cpu=100m,memory=4Mi \
+ --limits=cpu=200m,memory=8Mi \
+ --namespace=ns
+김민재 책임 님이 모두에게:    오후 3:22
+Flag --replicas has been deprecated, has no effect and will be removed in the future.
+pod/nginx created
+ 저도 동일한 에러가 발생합니다.
