@@ -514,3 +514,36 @@ kubectl run nginx \
 Flag --replicas has been deprecated, has no effect and will be removed in the future.
 pod/nginx created
  저도 동일한 에러가 발생합니다.
+구세완 님이 모두에게:    오후 3:22
+kubectl config use-context default  도 안됩니닫..
+구세완 님이 모두에게:    오후 3:23
+아뇨.. 그 명령이 안됩니닫.
+구세완 님이 모두에게:    오후 3:23
+error: no context exists with the name: "default"
+
+김민재 책임 님이 모두에게:    오후 3:24
+저는 옵션이 deprecated 되었다고 나오지만 
+김민재 책임 님이 모두에게:    오후 3:24
+k3s@master:~/metrics$ kubectl get pod
+NAME    READY   STATUS    RESTARTS   AGE
+nginx   1/1     Running   0          98s
+k3s@master:~/metrics$ 
+
+김민재 책임 님이 모두에게:    오후 3:24
+이렇게 실행 되면 동작 하는걸까요?
+구세완 님이 모두에게:    오후 3:37
+예
+vs하창완 님이 모두에게:    오후 3:37
+네
+김민재 책임 님이 모두에게:    오후 3:37
+네
+윤태희/책임/빅데이터엔지니어링TP 님이 모두에게:    오후 3:37
+OK
+박상욱책임/생체인지Task/CTO 님이 모두에게:    오후 3:43
+공유해주신 방법으로 어제 클러스터를 구성했었는데 오늘 해당 클러스터에서 수업을 들어보니 멀티 클러스터로 동작을 하지 않습니다.
+박상욱책임/생체인지Task/CTO 님이 모두에게:    오후 3:45
+그냥 하나의 클러스터에 복수 마스터 복수 워커형태로 동작을 합니다.
+박상욱책임/생체인지Task/CTO 님이 모두에게:    오후 3:45
+네
+박상욱책임/생체인지Task/CTO 님이 모두에게:    오후 3:45
+마스터1에 워커1을 조인시켜도 마스터2를 통해 리소스 배포를 하면 마스터2의 워커1이 아닌 마스터1의 워커1에 배포가 되는 경우도 있습니다.
