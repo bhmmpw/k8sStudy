@@ -1,0 +1,172 @@
+   24      --disable traefik \
+  164  kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk '{print $1}')
+  168  kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk '{print $1}')
+  193  kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk '{print $1}')
+  194  kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk '{print $1}') | grep token
+  263  vimdiff deployment.yaml.bak deployment.yaml
+  265  vimdiff deployment.yaml.bak deployment.yaml
+  267  vimdiff deployment.yaml.bak deployment.yaml
+  288  vimdiff deployment.yaml.bak deployment.yaml
+  295  vimdiff deployment.yaml.bak deployment.yaml
+  324  vimdiff example/deployment.yaml.bak example/deployment.yaml
+  344  vimdiff deployment.yaml.bak deployment.yaml
+  381  k get pods
+  382  k get ep
+  400  k logs depployment.apps/leader-elector leader-elector
+  401  k logs deployment.apps/leader-elector leader-elector
+  402  k delete pod leader-elector-64989fc88c-vjm22
+  403  k logs deployment.apps/leader-elector leader-elector
+  410  k get pods | grep elect
+  411  k inspect pods leader-elector-64989fc88c-56vtb
+  412  k describe pods leader-elector-64989fc88c-56vtb
+  415  k describe pods leader-elector-64989fc88c-56vtb
+  421  k get cluster
+  422  k config 
+  423  k config view
+  425  k config view
+  426  k config help
+  427  k config --help
+  428  k config get-clusters
+  429  k config get-clusters --help
+  444  k create -f nginx-deployment.yaml 
+  445  k rollout status deployment/nginx-deployment
+  446  k get deploy nginx-deployment -o yaml | grep strategy -A 4
+  449  k get deploy -n all-namespaces
+  450  k get deploy -n --all-namespaces
+  451  k get deploy --all-namespaces
+  453  k create -f echo-version.yaml 
+  455  k create -f update-checker.yaml 
+  456  k get pod --all-namespaces
+  458  k get pod --all-namespaces
+  461  k get deploy --all-namespaces | grep echo
+  462  k delete deploy echo-version
+  463  k delete deploy update-checker
+  466  k create -f echo-version.yaml 
+  467  k get svc | grep echo
+  468  k delete svc echo-version
+  469  k get deploy | grep echo
+  470  k delete deploy echo-version
+  471  k get pod | grep echo
+  472  k get deploy | grep update
+  473  k get svc | grep update
+  474  k create -f echo-version.yaml 
+  476  k get pod | grep echo
+  486  k create -f echo-version.yaml 
+  487  k delete svc echo-version
+  488  k delete deploy echo-version
+  489  k get pod --all-namespaces
+  490  k delete pod update-checker
+  492  k get pod --all-namespaces
+  523  k get serviceAccounts
+  524  k get sa default -o yaml
+  525  k get sa default -o yaml | kubectl-neat 
+  528  #k create secret docker-registry regcred --docker-server=lookerz-private --docker-username=lookerz --dockerpassword=sunsp4750 --docker-
+  545  k apply -f my-private-reg-pod.yaml 
+  547  k apply -f my-private-reg-pod.yaml 
+  549  k apply -f my-private-reg-pod.yaml 
+  550  k get pods --all-namespaces
+  590  k apply -f hello-allow-from-foo.yaml 
+  591  k get networkpolicy.networking.k8s.io
+  593  k describe netowkrpolicy.networking.k8s.io
+  594  k get networkpolicy.networking.k8s.io
+  595  k describe networkpolicy.networking.k8s.io
+  596  k run -l app=foo --image=alpine --restart=Never --rm -it test-1
+  597  k get pods --all-namespaces
+  601  k logs -f update-checker
+  697  k cluster-info
+  698  k get node -o wide
+  792  k create -f hue-learn-deployment.yaml 
+  793  k get pods --all-namespaces
+  798  k apply -f hue-learn-deployment.yaml 
+  803  k get deploy --all-namespaces
+  804  k delete default -n heu-learn
+  805  k delete hue-learn -n default
+  806  k delete deploy hue-learn -n default
+  807  k delete deploy kubernetes-dashboard -n kubernetes-dashboard
+  808  k delete deploy nginx-deployment -n default
+  809  k delete deploy etcd-operator-deployment -n default
+  810  k delete deploy prometheus-deployment -n monitoring
+  811  k delete deploy dashboard-metrics-scraper -n kubernetes-dashboard
+  812  k delete deploy leader-elector -n default
+  824  k get pods --all-namespaces
+  825  k delete pod private-reg -n default
+  826  k delete pod -n default example-etcd-cluster-jz2p9v8pck
+  827  k delete pod -n default example-etcd-cluster-4mqbqcvstb
+  828  k delete pod -n default example-etcd-cluster-2slvlwzmxl
+  829  k delete pod -n default test-1
+  830  k delete pod -n default hello-web
+  831  k delete pod -n monitoring node-exporter-224dn
+  833  k get pods --all-namespaces
+  834  k delete pod -n monitoring node-exporter-pl7ql
+  835  k delete pod -n monitoring node-exporter-224dn
+  841  k get pods
+  842  k exec hue-reminders-64777b8679-4dgvp -- nslookup hue-reminders.default.svc.cluster.local
+  844  k get pod
+  845  k exec hue-learn-74fd7cc95d-kj925 -- nslookup hue-reminders.default.svc.cluster.local
+  846  k get svc
+  847  k exec hue-reminders-64777b8679-4dgvp -- nslookup hue-reminders.default.svc.cluster.local
+  848  k exec hue-reminders-64777b8679-4dgvp -- nslookup hue-reminders
+  849  k get pod
+  850  k exec hue-reminders-64777b8679-whzh9 -- wget -q -O - hue-reminders.default.svc.cluster.local:8080
+  851  k exec hue-learn-74fd7cc95d-kj925 -- wget -q -O - hue-reminders.default.svc.cluster.local:8080
+  852  k get svc
+  853  k exec hue-reminders-64777b8679-4dgvp -- wget -q -O - hue-reminders.default.svc.cluster.local:8080
+  854  k exec hue-reminders-64777b8679-4dgvp -- sh
+  855  k exec -it hue-reminders-64777b8679-4dgvp -- sh
+  860  k get pod
+  861  k taint node worker1 tkey=10:PreferNoSchedule
+  862  k get pod
+  863  k get deploy
+  864  k delete pod trouble-shooter
+  866  k taint node worker1 project=A:NoSchedule
+  867  k get node
+  868  k describe node worker1
+  869  k get node
+  870  k describe node worker1
+  872  k get node worker1 -o yaml | grep -A
+  873  k get node worker1 -o yaml | grep -A 4 taints
+  874  k get node worker1 -o yaml | tail -a taints.yaml
+  875  k get node worker1 -o yaml > taints.yaml
+  879  k get node worker1 -o yaml | kubectl-neat > taints.yaml
+  881  k create -f truoble-shooter.yaml 
+  882  k get pod
+  906  k get poddisruptionbudgets.policy 
+  908  k get pods
+  909  k delete pod trouble-shooter 
+  911  k describe node worker1
+  913  k describe node worker1
+  917  k taint --help
+  919  k taint --help
+  922  k taint node worker1 tkey=10:PreferNoSchedule-
+  923  k taint node worker1 project=A:NoSchedule-
+  925  k get node worker1 -o yaml > taints.yaml
+  929  k create -f truoble-shooter.yaml 
+  930  k get pod
+  931  k delete pod trouble-shooter
+  934  k apply -f no-tolerate.yaml 
+  935  k get pod
+  936  k describe pod no-tolerate
+  937  k describe pod no-tolerate | grep node
+  939  k get pod -o wide
+  940  k describe node worker1
+  941  k describe node worker1 | grep taint
+  944  k get node worker1 -o yaml > taints.yaml
+  947  k get pod -o wide
+  948  k delete pod no-tolerate 
+  950  k taint node worker1 project=A:NoSchedule
+  955  k apply -f no-tolerate.yaml
+  957  k get pod
+  958  k get pod -o wide
+  965  k get node worker1 -o yaml > log.yaml
+  970  k get node worker1 -o yaml | kubectl-neat > log.yaml
+  977  k create -f tolerate.yaml 
+  980  k apply -f badsector.yaml 
+  981  k get pods -o wide
+  984  k get pods -o wide
+  987  k get pods -o wide
+  989  k get node worker1 -o yaml | kubectl-neat > taints.yaml
+  997  k taint node worker1 badsector-
+  998  k taint node worker1 project-
+ 1000  k get pod
+ 1001  k delete pod badsector
+ 1002  k delete pod --all
