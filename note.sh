@@ -325,3 +325,87 @@ spec:
   - key: "badsector"
     operator: "Exists"
 
+신동렬/LG유플러스 님이 모두에게:    오전 11:14
+taint와 toleration은 실제 상용 서비스 구성 기준에서는 어떠한 케이스에서 적용을 검토해볼 수 있을까요? 
+신동렬/LG유플러스 님이 모두에게:    오전 11:15
+일반적으로는 적용을 하지 않을 것 같아서 질문드립니다. 어떠한 직접적인 케이스에서 사용하고 일반적으로는 사용하지 않는게 맞는지 궁금합니다. 
+강사 김대경 님이 모두에게:    오전 11:15
+apiVersion: v1
+kind: Pod
+metadata:
+  name: node-affinity
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: disktype
+            operator: In
+            values:
+            - ssd
+
+강사 김대경 님이 모두에게:    오전 11:31
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pod-affinity
+spec:
+  selector:
+    matchLabels:
+      app: affinity
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: affinity
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - affinity
+            topologyKey: "kubernetes.io/hostname"
+구세완 님이 모두에게:    오전 11:39
+node affinity 는 아래 명령어로 라벨링해서 동작되었습니다. 
+구세완 님이 모두에게:    오전 11:39
+kubectl label node worker1 disktype=ssd
+강사 김대경 님이 모두에게:    오전 11:42
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pod-antiaffinity
+spec:
+  selector:
+    matchLabels:
+      app: antiaffinity
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: antiaffinity
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - antiaffinity
+            topologyKey: "kubernetes.io/hostname"
+
