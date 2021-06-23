@@ -578,3 +578,12 @@ NODE_TOKEN값은 파라메터로 안넣어줘도 되는건가요?
 Unable to connect to the server: x509: certificate signed by unknown authority
 k3s@master2:~$ 
 
+김민재 책임 님이 모두에게:    오후 4:30
+네 k3s@master2:~$ sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
+k3s@master2:~$ sudo chown -R k3s:k3s ~/.kube
+k3s@master2:~$ kubectl get node -o wide
+NAME      STATUS   ROLES                       AGE     VERSION            INTERNAL-IP   EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION     CONTAINER-RUNTIME
+master1   Ready    control-plane,etcd,master   14m     v1.20.0-rc4+k3s1   10.0.2.100    <none>        Ubuntu 20.04.2 LTS   5.8.0-55-generic   docker://20.10.2
+master2   Ready    control-plane,etcd,master   5m56s   v1.20.0-rc4+k3s1   10.0.2.200    <none>        Ubuntu 20.04.2 LTS   5.8.0-55-generic   docker://20.10.2
+k3s@master2:~$ 
+말씀하신대로 하니 동작 합니다.
