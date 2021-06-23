@@ -547,3 +547,34 @@ OK
 네
 박상욱책임/생체인지Task/CTO 님이 모두에게:    오후 3:45
 마스터1에 워커1을 조인시켜도 마스터2를 통해 리소스 배포를 하면 마스터2의 워커1이 아닌 마스터1의 워커1에 배포가 되는 경우도 있습니다.
+CTO_김성찬 님이 모두에게:    오후 4:07
+저는 DHCP 로 IP 설정이 되어서 reboot 이 가능할지..
+박상욱책임/생체인지Task/CTO 님이 모두에게:    오후 4:21
+server --server https://$MASTER_IP:6443
+박상욱책임/생체인지Task/CTO 님이 모두에게:    오후 4:21
+이거로 바꾸셔야 합니다.
+공서우/선임연구원/DXT센터 님이 모두에게:    오후 4:21
+master2도 cluster_init인가요?
+공서우/선임연구원/DXT센터 님이 모두에게:    오후 4:21
+--server 같은데 저도...
+구세완 님이 모두에게:    오후 4:21
+환경이 다른데, sudo chown -R $(id -u):$(id -g) ~/.kube 로 해도 괜찮은지요?
+박상욱책임/생체인지Task/CTO 님이 모두에게:    오후 4:23
+uid와 gid 를 뽑아오는 명령이라서 괜찮습니다.
+민경직/선임/webOS Platform Task 님이 모두에게:    오후 4:24
+NODE_TOKEN값은 파라메터로 안넣어줘도 되는건가요?
+민경직/선임/webOS Platform Task 님이 모두에게:    오후 4:24
+그건 환경변수 설정만 해준거고
+민경직/선임/webOS Platform Task 님이 모두에게:    오후 4:24
+실제 K3s설치할때
+민경직/선임/webOS Platform Task 님이 모두에게:    오후 4:24
+따로 파라메터로 넘겨주지 않아도 알아서 인식하는건지요?
+민경직/선임/webOS Platform Task 님이 모두에게:    오후 4:25
+아 첫번째줄에 K3S_TOKEN으로 넘겨주고 있네요
+신동렬/LG유플러스 님이 모두에게:    오후 4:27
+호오?????? 
+김민재 책임 님이 모두에게:    오후 4:28
+저는 master2에서 보면k3s@master2:~$ kubectl get node -o wide
+Unable to connect to the server: x509: certificate signed by unknown authority
+k3s@master2:~$ 
+
