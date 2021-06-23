@@ -1,0 +1,104 @@
+cat > compute-quota.yaml
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: compute-quota
+spec:
+  hard:
+    pods: 2
+    requests.cpu: 1
+    requests.memory: 20Mi
+    limits.cpu: 2
+    limits.memory: 2Gi
+
+
+
+cat > object-count-quota.yaml
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: object-counts-quota
+spec:
+  hard:
+    count/configmaps: 10
+    count/persistentvolumeclaims: 4
+    count/jobs.batch: 20
+    count/secrets: 3
+
+
+
+cat > nginx-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: nginx-deployment
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.7.9
+        ports:
+        - containerPort: 80
+
+
+
+kubectl run nginx \
+ --image=nginx \
+ --replicas=1 \
+ --requests=cpu=100m,memory=4Mi \
+ --limits=cpu=200m,memory=8Mi \
+ --namespace=ns
+
+
+cat > nginx-deployment-with-resources.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      run: nginx
+  template:
+    metadata:
+      labels:
+        run: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        resources:
+          requests:
+            cpu: 400m
+            memory: 6Mi
+          limits:
+            cpu: 400m
+            memory: 6Mi
+        ports:
+        - containerPort: 80
+
+
+
+cat > limits.yaml
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: limits
+spec:
+  limits:
+  - default:
+      cpu: 400m
+      memory: 5Mi
+    defaultRequest:
+      cpu: 400m
+      memory: 5Mi
+    type: Container
