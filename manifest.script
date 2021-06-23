@@ -1,0 +1,288 @@
+Advanced scheduling
+
+### Node selector
+k3s@master:~$ cat > trouble-shooter.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: trouble-shooter
+  labels:
+    role: trouble-shooter
+spec:
+  nodeSelector:
+    kubernetes.io/hostname: worker2
+  containers:
+  - name: trouble-shooter
+    image: g1g1/py-kube:0.2
+    command: ["bash"]
+    args: ["-c", "echo started...; while true ; do sleep 1 ; done"]
+
+### Taints and tolerations
+cat > no-tolerate.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: no-tolerate
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+
+
+cat > tolerate.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: tolerate
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+  tolerations:
+  - key: "project"
+    value: "A"
+    operator: "Equal"
+    effect: "NoSchedule"
+
+
+cat > badsector.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: badsector
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+  tolerations:
+  - key: "project"
+    value: "A"
+    operator: "Equal"
+    effect: "NoSchedule"
+  - key: "badsector"
+    operator: "Exists"
+
+
+cat > node-affinity.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: node-affinity
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: disktype
+            operator: In
+            values:
+            - ssd
+
+
+테스트 용 라벨 생성 : kubectl label node worker1 disktype=ssd
+
+cat > pod-affinity.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pod-affinity
+spec:
+  selector:
+    matchLabels:
+      app: affinity
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: affinity
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - affinity
+            topologyKey: "kubernetes.io/hostname"
+
+
+cat > pod-antiaffinity.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pod-antiaffinity
+spec:
+  selector:
+    matchLabels:
+      app: antiaffinity
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: antiaffinity
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - antiaffinity
+            topologyKey: "kubernetes.io/hostname"
+
+
+cat > redis-cache.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-cache
+spec:
+  selector:
+    matchLabels:
+      app: store
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: store
+    spec:
+      affinity:
+        # cache 서버끼리 멀리 스케줄링
+        # app=store 라벨을 가진 Pod끼리 멀리 스케줄링
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - store
+            topologyKey: "kubernetes.io/hostname"
+      containers:
+      - name: redis-server
+        image: redis
+
+
+cat > web-server.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-server
+spec:
+  selector:
+    matchLabels:
+      app: web-store
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: web-store
+    spec:
+      affinity:
+        # web 서버끼리 멀리 스케줄링
+        # app=web-store 라벨을 가진 Pod끼리 멀리 스케줄링
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - web-store
+            topologyKey: "kubernetes.io/hostname"
+        # web-cache 서버끼리 가까이 스케줄링
+ # app=store 라벨을 가진 Pod끼리 가까이 스케줄링
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - store
+            topologyKey: "kubernetes.io/hostname"
+      containers:
+      - name: web-app
+        image: nginx
+
+
+### Launching jobs
+
+cat > factorial-job.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: factorial5
+spec:
+  template:
+    metadata:
+      name: factorial5
+    spec:
+      containers:
+      - name: factorial5
+        image: python:3.6
+        command: ["python",
+                  "-c",
+                  "import math; print(math.factorial(5))"]
+      restartPolicy: Never
+
+
+
+cat > parallel-job.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sleep20
+spec:
+  completions: 3
+  parallelism: 6
+  template:
+    metadata:
+      name: sleep20
+    spec:
+      containers:
+      - name: sleep20
+        image: python:3.5
+        command: ["python",
+                  "-c",
+                  "import time; print('started...');
+                   time.sleep(20); print('done.')"]
+      restartPolicy: Never
+
+
+cat > cron-demo-job.yaml
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: cron-demo
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            name: cron-demo
+        spec:
+          containers:
+          - name: cron-demo
+            image: python
+            args:
+            - python
+            - -c
+            - from datetime import datetime; print('[{}] CronJob demo here...'.format(datetime.now()))
+          restartPolicy: OnFailure
