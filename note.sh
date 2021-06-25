@@ -26,10 +26,28 @@ CTO_김성찬 님이 모두에게:    오전 9:05
 export POD_NAME=$(kubectl get pods --namespace dev -l "app.kubernetes.io/name=hello-world,app.kubernetes.io/instance=hello-world" -o jsonpath="{.items[0].metadata.name}")
 강사 김대경 님이 모두에게:    오전 9:06
 export CONTAINER_PORT=$(kubectl get pod --namespace dev $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
-강사 김대경 님이 모두에게:    오전 9:06
-kubectl --namespace dev port-forward $POD_NAME 8080:$CONTAINER_PORT
-CTO_김성찬 님이 모두에게:    오전 9:08
-민경직 선임님, 네 그러네요  감사합니다
-민경직/선임/webOS Platform Task 님이 모두에게:    오전 9:19
-현업 적용이 어려운거 아닌가요 그러면
 
+
+
+
+
+
+
+
+구세완 님이 모두에게:    오전 9:34
+예
+신동렬/LG유플러스 님이 모두에게:    오전 9:40
+ready 0 입니다
+신동렬/LG유플러스 님이 모두에게:    오전 9:40
+맨 밑의 pod
+강사 김대경 님이 모두에게:    오전 10:02
+https://choosealicense.com/licenses/
+
+강사 김대경 님이 모두에게:    오전 10:03
+https://www.olis.or.kr/license/compareGuide.do
+구세완 님이 모두에게:    오전 10:15
+template 폴더내의 yaml 은 그동안 저희가 배운 kubernetes yaml 을 그대로 써도 되는지요? 아님 helm 문법에 맞도록 다시 작성해야하나요?
+구세완 님이 모두에게:    오전 10:19
+그럼 그동안 운영하던 쿠버네티스 코드는 재사용이 안되고 다시 작성을 해야하는 건가요?
+구세완 님이 모두에게:    오전 10:19
+아님 변경을 해주는 과정이 있는지요?
